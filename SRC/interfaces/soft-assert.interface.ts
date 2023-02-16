@@ -4,6 +4,7 @@ export interface SoftAssert {
   deepEquals: any;
   notEquals: any;
   includes: any;
+  matches: any;
   notIncludes: any;
   isUndefined: any;
   isNull: any;

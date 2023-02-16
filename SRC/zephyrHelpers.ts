@@ -138,7 +138,7 @@ export const getAllTestcases = async (): Promise<void> => {
     .get(`/rest/tests/1.0/project/${variables.projectId}/testcases`)
     .auth(variables.username, variables.password)
     .expect(200)
-    .then((res:any) => {
+    .then((res: any) => {
       variables.testCasesArray = res.body.testCases;
     });
 };
@@ -184,7 +184,7 @@ const createTestResult = async (testcaseId: number): Promise<number> => {
     .set('jira-project-id', variables.projectId)
     .auth(variables.username, variables.password)
     .send(jsonTestRunPayload)
-    .then((res:any) => {
+    .then((res: any) => {
       expect(res.statusCode).eq(201);
       testrun = res;
     });
@@ -239,7 +239,7 @@ export const updateTestResult = async (
     .set('content-Type', 'application/json;charset=UTF-8')
     .set('jira-project-id', variables.projectId)
     .send(jsonPayload)
-    .then((res:any) => {
+    .then((res: any) => {
       expect(res.statusCode).eq(200);
     });
 };
@@ -343,6 +343,27 @@ export const softAssert: SoftAssert = {
     } else {
       try {
         expect(sample).deep.include(pattern);
+        assertPassed = true;
+      } catch (error) {
+        const e: any = error;
+        this.failedAsserts.push(e);
+      }
+    }
+    return assertPassed;
+  },
+  matches(sample: any, pattern: any): boolean {
+    if (sample === undefined || pattern === undefined) {
+      console.log(
+        'ERROR [matches] please provide the sample and pattern arguments'
+      );
+      process.exit(1);
+    }
+    let assertPassed = false;
+    if (Array.isArray(sample) === true && Array.isArray(pattern) === true) {
+      console.log('ERROR [matches] Arrays are not supported');
+    } else {
+      try {
+        expect(sample).match(pattern);
         assertPassed = true;
       } catch (error) {
         const e: any = error;
